@@ -400,6 +400,30 @@ main h3,
   width: 50px;
   height: 50px;
 }
+.selected_row {
+  background-color: rgba(255, 0, 0, 0.395) !important;
+}
+#users {
+  background-color: #162623c2;
+  min-height: 360px;
+}
+#users table tbody tr:hover {
+  cursor: pointer;
+}
+.widget {
+  background-color: #162623c2;
+  min-height: 100px;
+  min-width: 300px;
+}
+#users_pagination {
+  list-style: none;
+}
+.w-600 {
+  width: 600px;
+}
+.bg-green {
+  background-color: #162623c2;
+}
 
 @media only screen and (max-width: 1300px) {
   .login-card {

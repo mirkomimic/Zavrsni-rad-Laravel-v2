@@ -22,14 +22,14 @@
     </div>
     <div class="nav_links d-flex align-items-center ms-auto">
       <ul class="d-flex mb-0 me-md-5">
-        <li><a href="#">Home</a></li>
+        <li><a href="/home">Home</a></li>
         {{-- if isset restaurant --}}
           <li><a href="#items_section">Items</a></li>
         {{-- endif --}}
         <li><a href="#orders_section">Orders</a></li>
         <li><a href="#">Contact</a></li>
         @if (Auth::user()->type == 'admin')
-          <li><a href="/admin">Admin Dashboard</a></li>
+          <li><a href="/admin">Dashboard</a></li>
         @endif
         @if (Auth::guard('web')->check())        
           <li>
