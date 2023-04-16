@@ -14,7 +14,8 @@ class Order extends Model
         'restaurant_id',
         'delivery_id',
         'status',
-        'grand_total'
+        'grand_total',
+        'delivery_location'
     ];
 
     public function user()

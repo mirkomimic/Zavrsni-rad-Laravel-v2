@@ -101,147 +101,169 @@ $("#btn_edit_item").click(function (e) {
 // });
 
 // select filter
-// $(document).on("change", "#select_filter", function () {
-//   const restaurant_id = $("#restaurant_id").val();
+$(document).on("change", "#select_filter", function () {
+  var selectedValue = $(this).find(":selected").val();
 
-//   var selectedValue = $(this).find(":selected").val();
+  if (selectedValue == "priceDesc") {
+    request = $.ajax({
+      headers: {
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      },
+      url: "http://127.0.0.1:8000/restaurant/items/priceDesc",
+      type: "post",
+    });
+  } else if (selectedValue == "priceAsc") {
+    request = $.ajax({
+      headers: {
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      },
+      url: "http://127.0.0.1:8000/restaurant/items/priceAsc",
+      type: "post",
+    });
+  }
+  request.done(function (response, textStatus, jqXHR) {
+    console.log(response.data.data);
+    $("#gridItems").empty();
+    var array = response.data.data;
 
-//   if (selectedValue == "priceDesc") {
-//     request = $.ajax({
-//       url: "controler/getItemsByPriceDesc.php",
-//       type: "post",
-//       data: { restaurant_id: restaurant_id },
-//     });
-//   } else if (selectedValue == "priceAsc") {
-//     request = $.ajax({
-//       url: "controler/getItemsByPriceAsc.php",
-//       type: "post",
-//       data: { restaurant_id: restaurant_id },
-//     });
-//   }
-//   request.done(function (response, textStatus, jqXHR) {
-//     var response = JSON.parse(response);
+    for (var i = 0; i < array.length; i++) {
+      card = `
+      <div class="card width-18 text-center bg-card">
+        <div id="itemImg" class="mx-auto mt-2 overflow-hidden">
+          <img src="storage/items/${array[i].image}" alt="">
+        </div>
+        <p>Name: ${array[i].name} </p>
+        <p>Price: ${array[i].price} </p>
+        <p>Category: ${array[i].category} </p>
+        <div class="m-2">
+          <form action="" class="deleteItemForm" name="deleteItemForm">
+            <input type="text" id="item_id" name="item_id" value="${array[i].id}" hidden>
+            <input type="text" name="restaurant_id" value="${array.restaurant_id}" hidden>
+            <input type="submit" onclick="confirm('Are you sure?')" class="btn btn-outline-danger btn-sm" value="Delete">
+          </form>
+        </div>
+      </div>`;
 
-//     $("#gridItems").empty();
+      $("#gridItems").append(card);
+    }
+  });
 
-//     for (var i = 0; i < response.length; i++) {
-//       card = `
-//       <div class="card width-18 text-center bg-card">
-//         <p>Name: ${response[i].name} </p>
-//         <p>Price: ${response[i].price} </p>
-//         <p>Category: ${response[i].category} </p>
-//         <div class="m-2">
-//           <form action="" class="deleteItemForm" name="deleteItemForm">
-//             <input type="text" id="item_id" name="item_id" value="${response[i].id}" hidden>
-//             <input type="text" name="restaurant_id" value="${restaurant_id}" hidden>
-//             <input type="submit" class="btn btn-outline-danger btn-sm" value="Delete">
-//           </form>
-//         </div>
-//       </div>`;
-
-//       $("#gridItems").append(card);
-//     }
-//   });
-
-//   request.fail(function (jqXHR, textStatus, error) {
-//     console.log("Desila se greska: " + textStatus, error);
-//   });
-// });
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Desila se greska: " + textStatus, error);
+  });
+});
 
 // text filter
-// $(document).on("keyup", "#search_input", function () {
-//   const restaurant_id = $("#restaurant_id").val();
+$(document).on("keyup", "#search_input", function () {
+  var searchValue = $(this).val();
 
-//   var searchValue = $(this).val();
+  request = $.ajax({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+    url: "http://127.0.0.1:8000/restaurant/items/search",
+    type: "post",
+    data: { searchValue: searchValue },
+  });
+  request.done(function (response, textStatus, jqXHR) {
+    console.log(response.data.data);
+    $("#gridItems").empty();
+    var array = response.data.data;
 
-//   request = $.ajax({
-//     url: "controler/getItemsByName.php",
-//     type: "post",
-//     data: { restaurant_id: restaurant_id, searchValue: searchValue },
-//   });
-//   request.done(function (response, textStatus, jqXHR) {
-//     var response = JSON.parse(response);
+    for (var i = 0; i < array.length; i++) {
+      card = `
+      <div class="card width-18 text-center bg-card">
+        <div id="itemImg" class="mx-auto mt-2 overflow-hidden">
+          <img src="storage/items/${array[i].image}" alt="">
+        </div>
+        <p>Name: ${array[i].name} </p>
+        <p>Price: ${array[i].price} </p>
+        <p>Category: ${array[i].category} </p>
+        <div class="m-2">
+          <form action="" class="deleteItemForm" name="deleteItemForm">
+            <input type="text" id="item_id" name="item_id" value="${array[i].id}" hidden>
+            <input type="text" name="restaurant_id" value="${array.restaurant_id}" hidden>
+            <input type="submit" onclick="confirm('Are you sure?')" class="btn btn-outline-danger btn-sm" value="Delete">
+          </form>
+        </div>
+      </div>`;
 
-//     $("#gridItems").empty();
+      $("#gridItems").append(card);
+    }
+  });
 
-//     for (var i = 0; i < response.length; i++) {
-//       card = `
-//       <div class="card width-18 text-center bg-card">
-//         <p>Name: ${response[i].name} </p>
-//         <p>Price: ${response[i].price} </p>
-//         <p>Category: ${response[i].category} </p>
-//         <div class="m-2">
-//           <form action="" class="deleteItemForm" name="deleteItemForm">
-//             <input type="text" id="item_id" name="item_id" value="${response[i].id}" hidden>
-//             <input type="text" name="restaurant_id" value="${response[i].restaurant_id}" hidden>
-//             <input type="submit" class="btn btn-outline-danger btn-sm" value="Delete">
-//           </form>
-//         </div>
-//       </div>`;
-
-//       $("#gridItems").append(card);
-//     }
-//   });
-
-//   request.fail(function (jqXHR, textStatus, error) {
-//     console.log("Desila se greska: " + textStatus, error);
-//   });
-// });
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Desila se greska: " + textStatus, error);
+  });
+});
 
 // add to cart
-// $(document).on("submit", "#addToCartForm", function (e) {
-//   e.preventDefault();
-//   const form = $(this).serialize();
-//   console.log(form);
-//   request = $.ajax({
-//     url: "controler/addToCart.php",
-//     type: "post",
-//     data: form,
-//   });
-//   request.done(function (response, status, jqXHR) {
-//     // console.log(response);
-//     if (response === "Success") {
-//       // location.reload(true);
-//       // getAllItems();
-//       // $("#alert").show().find("strong").html("Item edited!");
-//       getAllItemsFromCart();
-//       // alert("Item added to cart");
-//     } else {
-//       console.log("Error adding item to cart" + response);
-//     }
-//   });
-//   // $("#alert").hide().delay(3000).fadeOut(800);
-//   request.fail(function (jqXHR, textStatus, error) {
-//     console.log("Error adding item " + textStatus, error);
-//   });
-// });
+$(document).on("submit", "#addToCartForm", function (e) {
+  e.preventDefault();
+  var id = this.item_id.value;
+  request = $.ajax({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+    url: "http://127.0.0.1:8000/add-to-cart/" + id,
+    type: "get",
+  });
+  request.done(function (response, status, jqXHR) {
+    // getAllItems();
+    // $("#alert").show().find("strong").html("Item edited!");
+    getAllItemsFromCart();
+    // alert("Item added to cart");
+  });
+  // $("#alert").hide().delay(3000).fadeOut(800);
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Error adding item " + textStatus, error);
+  });
+});
+
 // remove from cart
-// $(document).on("submit", "#removeFromCartForm", function (e) {
-//   e.preventDefault();
-//   const form = $(this).serialize();
-//   console.log(form);
-//   request = $.ajax({
-//     url: "controler/removeFromCart.php",
-//     type: "post",
-//     data: form,
-//   });
-//   request.done(function (response, status, jqXHR) {
-//     console.log(response);
-//     if (response === "Success") {
-//       // location.reload(true);
-//       // getAllItems();
-//       // $("#alert").show().find("strong").html("Item edited!");
-//       getAllItemsFromCart();
-//       // alert("Item removed from cart");
-//     } else {
-//       console.log("Error removing item form cart" + response);
-//     }
-//   });
-//   // $("#alert").hide().delay(3000).fadeOut(800);
-//   request.fail(function (jqXHR, textStatus, error) {
-//     console.log("Error adding item " + textStatus, error);
-//   });
-// });
+$(document).on("submit", "#removeFromCartForm", function (e) {
+  e.preventDefault();
+  var id = this.item_id.value;
+  request = $.ajax({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+    url: "http://127.0.0.1:8000/remove-from-cart/" + id,
+    type: "get",
+  });
+  request.done(function (response, status, jqXHR) {
+    // getAllItems();
+    // $("#alert").show().find("strong").html("Item edited!");
+    getAllItemsFromCart();
+    // alert("Item added to cart");
+  });
+  // $("#alert").hide().delay(3000).fadeOut(800);
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Error adding item " + textStatus, error);
+  });
+});
+
+// clear cart
+$(document).on("submit", "#clear_cart", function (e) {
+  e.preventDefault();
+  request = $.ajax({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+    url: "http://127.0.0.1:8000/clear-cart",
+    type: "get",
+  });
+  request.done(function (response, status, jqXHR) {
+    // getAllItems();
+    // $("#alert").show().find("strong").html("Item edited!");
+    getAllItemsFromCart();
+    // alert("Item added to cart");
+  });
+  // $("#alert").hide().delay(3000).fadeOut(800);
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Error adding item " + textStatus, error);
+  });
+});
 
 $(document).on("click", "#cartIcon", function () {
   if ($("#cart").hasClass("visible1")) {
@@ -293,54 +315,56 @@ $(document).on("click", "#cartIcon", function () {
 //   });
 // }
 
-// function getAllItemsFromCart() {
-//   // const restaurant_id = $("#restaurant_id").val();
+function getAllItemsFromCart() {
+  request = $.ajax({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+    url: "http://127.0.0.1:8000/get-items-from-cart",
+    type: "get",
+  });
 
-//   request = $.ajax({
-//     url: "controler/getAllItemsFromCart.php",
-//     type: "post",
-//     data: "",
-//   });
+  request.done(function (response, textStatus, jqXHR) {
+    var cart = response.data;
+    for (itemId in cart) {
+      console.log(cart[itemId].name);
+    }
 
-//   request.done(function (response, textStatus, jqXHR) {
-//     var response = JSON.parse(response);
-//     // console.log(response);
-//     // console.log(response.length);
+    $("#cart table tbody").empty();
 
-//     $("#cart table tbody").empty();
+    let grandTotal = 0;
+    let qtyInCart = 0;
+    for (itemId in cart) {
+      card = `
+        <tr>
+          <td><img src="/storage/items/${cart[itemId].image}" alt=""></td>
+          <td>${cart[itemId].name}</td>
+          <td>${cart[itemId].price}</td>
+          <td>${cart[itemId].quantity}</td>
+          <td>${(cart[itemId].price * cart[itemId].quantity).toFixed(2)}</td>
+        </tr>
+      `;
+      grandTotal += cart[itemId].price * cart[itemId].quantity;
+      $("#cart table tbody").append(card);
+      qtyInCart += cart[itemId].quantity;
+    }
+    console.log(grandTotal);
+    if (grandTotal == 0) {
+      $("#cart table tbody").append('<td colspan="5">Empty Cart</td>');
+    }
+    $("#grand_total").html(grandTotal.toFixed(2));
+    $("#qtyInCart").html(qtyInCart);
+    if (qtyInCart > 0) {
+      $("#cartIcon").addClass("bx-tada");
+    } else {
+      $("#cartIcon").removeClass("bx-tada");
+    }
+  });
 
-//     let grandTotal = 0;
-//     let qtyInCart = 0;
-//     for (var i = 0; i < response.length; i++) {
-//       card = `
-//         <tr>
-//           <td>${response[i].name}</td>
-//           <td>${response[i].price}</td>
-//           <td>${response[i].qty}</td>
-//           <td>${response[i].price * response[i].qty}</td>
-//         </tr>
-//       `;
-//       grandTotal += response[i].price * response[i].qty;
-//       $("#cart table tbody").append(card);
-//       qtyInCart += response[i].qty;
-//     }
-//     console.log(grandTotal);
-//     if (grandTotal == 0) {
-//       $("#cart table tbody").append('<td colspan="4">Empty Cart</td>');
-//     }
-//     $("#grand_total").html(grandTotal);
-//     $("#qtyInCart").html(qtyInCart);
-//     if (qtyInCart > 0) {
-//       $("#cartIcon").addClass("bx-tada");
-//     } else {
-//       $("#cartIcon").removeClass("bx-tada");
-//     }
-//   });
-
-//   request.fail(function (jqXHR, textStatus, error) {
-//     console.log("Desila se greska: " + textStatus, error);
-//   });
-// }
+  request.fail(function (jqXHR, textStatus, error) {
+    console.log("Desila se greska: " + textStatus, error);
+  });
+}
 
 // api ajax
 
@@ -348,6 +372,7 @@ $(document).ready(function () {
   // getRestaurants();
   getApiTemp();
   getUsers();
+  getGeoLocation();
 });
 
 // function getRestaurants() {
@@ -602,3 +627,13 @@ $(document).on("click", "#delete_user", function (e) {
   });
   $("#edit_user_msg").hide().delay(3000).fadeOut(800);
 });
+
+function getGeoLocation() {
+  $.ajax({
+    url: "https://get.geojs.io/v1/ip/geo.json",
+    type: "get",
+    success: function (data) {
+      $("#current_location").val(data.latitude + ", " + data.longitude);
+    },
+  });
+}

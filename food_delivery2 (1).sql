@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 14, 2023 at 04:29 PM
+-- Generation Time: Apr 16, 2023 at 05:41 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.1.5
 
@@ -119,7 +119,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2023_04_06_165716_create_orders_table', 1),
 (9, '2023_04_06_190658_create_order_items_table', 1),
 (10, '2023_04_13_085138_add_quantity_and_total_to_order_items_table', 2),
-(11, '2023_04_13_090444_add_grand_total_to_orders_table', 3);
+(11, '2023_04_13_090444_add_grand_total_to_orders_table', 3),
+(12, '2023_04_15_152419_add_location_to_orders_table', 4);
 
 -- --------------------------------------------------------
 
@@ -135,21 +136,27 @@ CREATE TABLE `orders` (
   `status` enum('created','accepted','delivered','canceled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'created',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `grand_total` decimal(8,2) NOT NULL
+  `grand_total` decimal(8,2) NOT NULL,
+  `delivery_location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `restaurant_id`, `delivery_id`, `status`, `created_at`, `updated_at`, `grand_total`) VALUES
-(1, 1, 1, NULL, 'created', '2023-04-13 04:40:24', '2023-04-13 04:40:24', '0.00'),
-(2, 1, 1, NULL, 'created', '2023-04-13 04:43:31', '2023-04-13 04:43:31', '0.00'),
-(3, 1, 1, NULL, 'created', '2023-04-13 07:15:34', '2023-04-13 07:15:34', '0.00'),
-(4, 1, 1, NULL, 'created', '2023-04-13 07:19:29', '2023-04-13 07:19:29', '0.00'),
-(5, 1, 1, NULL, 'created', '2023-04-13 07:21:22', '2023-04-13 07:21:22', '3810.94'),
-(6, 1, 1, NULL, 'created', '2023-04-13 09:06:30', '2023-04-13 09:06:30', '4433.38'),
-(7, 1, 3, NULL, 'created', '2023-04-13 10:02:34', '2023-04-13 10:02:34', '2113.96');
+INSERT INTO `orders` (`id`, `user_id`, `restaurant_id`, `delivery_id`, `status`, `created_at`, `updated_at`, `grand_total`, `delivery_location`) VALUES
+(1, 1, 1, NULL, 'created', '2023-04-13 04:40:24', '2023-04-13 04:40:24', '0.00', NULL),
+(2, 1, 1, NULL, 'created', '2023-04-13 04:43:31', '2023-04-13 04:43:31', '0.00', NULL),
+(3, 1, 1, NULL, 'created', '2023-04-13 07:15:34', '2023-04-13 07:15:34', '0.00', NULL),
+(4, 1, 1, NULL, 'created', '2023-04-13 07:19:29', '2023-04-13 07:19:29', '0.00', NULL),
+(5, 1, 1, NULL, 'created', '2023-04-13 07:21:22', '2023-04-13 07:21:22', '3810.94', NULL),
+(6, 1, 1, NULL, 'created', '2023-04-13 09:06:30', '2023-04-13 09:06:30', '4433.38', NULL),
+(7, 1, 3, NULL, 'created', '2023-04-13 10:02:34', '2023-04-13 10:02:34', '2113.96', NULL),
+(8, 2, 1, NULL, 'created', '2023-04-15 13:27:51', '2023-04-15 13:27:51', '2806.52', '44.8046, 20.4637'),
+(9, 2, 1, NULL, 'created', '2023-04-15 13:30:02', '2023-04-15 13:30:02', '3810.94', 'address'),
+(10, 1, 1, NULL, 'created', '2023-04-16 05:22:28', '2023-04-16 05:22:28', '8134.30', 'address'),
+(11, 1, 1, NULL, 'created', '2023-04-16 05:22:51', '2023-04-16 05:22:51', '2527.91', '44.8046, 20.4637'),
+(13, 1, 1, NULL, 'created', '2023-04-16 09:23:36', '2023-04-16 09:23:36', '3428.96', 'address');
 
 -- --------------------------------------------------------
 
@@ -175,7 +182,15 @@ INSERT INTO `order_items` (`order_id`, `item_id`, `quantity`, `total`) VALUES
 (6, 10, 1, '1905.47'),
 (6, 9, 1, '1626.86'),
 (6, 7, 1, '901.05'),
-(7, 3, 1, '2113.96');
+(7, 3, 1, '2113.96'),
+(8, 7, 1, '901.05'),
+(8, 10, 1, '1905.47'),
+(9, 10, 2, '3810.94'),
+(10, 9, 5, '8134.30'),
+(11, 7, 1, '901.05'),
+(11, 9, 1, '1626.86'),
+(13, 7, 2, '1802.10'),
+(13, 9, 1, '1626.86');
 
 -- --------------------------------------------------------
 
@@ -293,9 +308,8 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `address`, `email`, `email
 (1, 'Pera', 'Peric', 'address1', 'pera@gmail.com', NULL, '$2y$10$viABtJ9bnYyMATdfTo3TAu3ylpOxlEpS9a1rtDIcxy7JHE8.unxvu', NULL, 'customer', NULL, '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
 (2, 'Admin', 'Admin', 'address2', 'admin@gmail.com', NULL, '$2y$10$9wVQCKTVWLSJtu0SUZafzufn0femE6bx6FHlbFi2vN7IzmXyqQF5e', NULL, 'admin', NULL, '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
 (3, 'Neva', 'Larson', '708 Bernier Junctions Suite 410\nWainoport, CA 53281', 'beahan.maxie@example.org', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'kCwa72zZhn', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
-(4, 'Mortimer', 'Heidenreich', '86596 Ryleigh Turnpike Apt. 666\nNorth Kevin, ME 79594', 'melvin.sipes@example.org', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', '2FgvP94S3O', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
-(5, 'Pera4', 'Peric4', 'addresss 33', 'pera5@gmail.com', NULL, '$2y$10$8nEJWJbC6O4A/KUp0GQ5xOgWyOheS8tEaM88Npt4taIkag8PiVjvy', NULL, 'customer', 'ZAKaXB6Lvc', '2023-04-09 05:29:16', '2023-04-14 12:27:48'),
-(6, 'Darby', 'Erdman', '49304 Scarlett Well\nNew Colin, MD 12710', 'friedrich.lebsack@example.org', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'GlRhSWbtWM', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
+(5, 'Pera4', 'Peric44', 'addresss 33', 'pera5@gmail.com', NULL, '$2y$10$EIVshTDK6mGU2ieYL6ZHu.fCypw3YPcltat/sbRU5RG9EwLubUn2i', NULL, 'customer', 'ZAKaXB6Lvc', '2023-04-09 05:29:16', '2023-04-15 05:04:44'),
+(6, 'Darby', 'Erdman', '49304 Scarlett Well\nNew Colin, MD 12710', '0-mail.com', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'GlRhSWbtWM', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
 (7, 'Alexandrea', 'Heathcote', '14555 Major Mountains Suite 332\nNorth Monserrateville, SD 32308', 'jerrold96@example.com', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 's977H2BVP5', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
 (8, 'Jazmin', 'Friesen', '853 Van Square\nEast Virginieport, AR 49692-5252', 'robyn.kreiger@example.org', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'bfhCAF9WSn', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
 (9, 'Pete', 'Spencer', '14830 Kulas Field Suite 519\nLeeton, NC 78957', 'alize.wilkinson@example.org', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'T53gJWXxHi', '2023-04-09 05:29:16', '2023-04-09 05:29:16'),
@@ -398,13 +412,13 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

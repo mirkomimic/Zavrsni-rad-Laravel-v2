@@ -43,7 +43,7 @@ class HomeController extends Controller
         $restaurant = Restaurant::find($id);
         $items = Item::where('restaurant_id', $id)->paginate(9);
 
-        $cartItems = session()->get('cartItems');
+        $cartItems = session()->get('cartItems', []);
         $cartQty = 0;
         foreach ($cartItems as $item) {
             $cartQty += $item['quantity'];

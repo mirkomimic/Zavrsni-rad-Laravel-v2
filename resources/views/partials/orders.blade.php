@@ -11,7 +11,7 @@
                   <p>|</p>
                   <p>Order Date: {{ $order->created_at }}</p>
                   <p>|</p>
-                  <p>Customer: {{ $order->user->first_name }}</p>
+                  <p>Customer: {{ $order->user->first_name . ' ' . $order->user->last_name }}</p>
                 </div>
                 <br>
                 <div>
@@ -50,7 +50,7 @@
                   </table>
                 </div>
                 <div class="flex justify-content-between margin-top">
-                  <p class="">{{ $order->user->address }}</p>
+                  <p class="">{{ $order->delivery_location == "address" ? $order->user->address : $order->delivery_location }}</p>
                   <p>|</p>
                   <p class="">Order status: {{ $order->status }}</p>
                   <p>|</p>

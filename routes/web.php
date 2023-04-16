@@ -33,6 +33,8 @@ Route::post('users/logout', [LoginController::class, 'userLogout'])->name('user.
 
 Route::get('/add-to-cart/{item}', [CartController::class, 'addToCart'])->name('add.to.cart');
 Route::get('/remove-from-cart/{item}', [CartController::class, 'removeFromCart'])->name('remove.from.cart');
+Route::get('/get-items-from-cart', [CartController::class, 'getItemsFromCart'])->name('get.items.from.cart');
+Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('clear.cart');
 
 Route::middleware('auth')->group(function () {
     Route::post('/order', [OrderController::class, 'store'])->name('create.order');
@@ -49,6 +51,9 @@ Route::prefix('restaurant')->group(function () {
     Route::post('/deleteItem', [RestaurantController::class, 'deleteItem'])->name('restaurant.delete.item');
     Route::post('/getItem', [RestaurantController::class, 'getItem'])->name('restaurant.get.item');
     Route::post('/editItem', [RestaurantController::class, 'editItem'])->name('restaurant.edit.item');
+    Route::post('/items/priceAsc', [RestaurantController::class, 'getItemsByPriceAsc'])->name('restaurant.items.asc');
+    Route::post('/items/priceDesc', [RestaurantController::class, 'getItemsByPriceDesc'])->name('restaurant.items.desc');
+    Route::post('/items/search', [RestaurantController::class, 'filterByName'])->name('restaurant.items.search');
 
     Route::get('/login', [RestaurantLoginController::class, 'showLoginForm'])->name('restaurant.login');
     Route::post('/login', [RestaurantLoginController::class, 'login'])->name('restaurant.login.submit');

@@ -87,11 +87,19 @@
                     </tr>
                 </tfoot>           
               </table><br>
+              <div class="d-flex justify-content-center mb-3">
+                <label for="delivery_location">Choose location: </label>
+                <select form="create_order" name="delivery_location" id="delivery_location" class="bg-green text-white ms-2">
+                  <option value="address">{{Auth::user()->address}}</option>
+                  <option id="current_location" value="">Current location</option>
+                </select>
+              </div>
               <div class="flex-row justify-content-center">
-                <form action="" method="post">
+                <form id="clear_cart" action="{{ route('clear.cart') }}" method="get">
+                  @csrf
                   <input class="btn btn-outline-warning btn-sm" type="submit" value="Clear Cart" name="clear-cart">
                 </form>
-                <form action="{{ route('create.order') }}" method="post">
+                <form id="create_order" action="{{ route('create.order') }}" method="post">
                   @csrf
                   <input type="text" name="restaurant_id" value="{{ $restaurant->id ?? null }}" hidden>
                   <input class="btn btn-outline-success btn-sm" type="submit" value="Order" name="order">
@@ -110,7 +118,3 @@
     </div>
   </div>
 </nav>
-
-<?php
-
-?>

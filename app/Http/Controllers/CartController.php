@@ -31,7 +31,10 @@ class CartController extends Controller
         }
         session()->put('cartItems', $cartItems);
         // session()->put('qty', $qty);
-        return redirect()->back();
+        // return redirect()->back();
+        // return response()->json([
+        //     'data' => $cartItems
+        // ]);
     }
 
     public function removeFromCart(Item $item)
@@ -47,5 +50,19 @@ class CartController extends Controller
         }
         session()->put('cartItems', $cartItems);
         return redirect()->back();
+    }
+
+    public function getItemsFromCart()
+    {
+        $cartItems = session()->get('cartItems');
+
+        return response()->json([
+            'data' => $cartItems
+        ]);
+    }
+
+    public function clearCart()
+    {
+        session()->put('cartItems', []);
     }
 }

@@ -97,4 +97,29 @@ class RestaurantController extends Controller
 
         return redirect()->route('restaurant.dashboard')->with(['msg' => 'Item edited!']);
     }
+
+    public function getItemsByPriceAsc()
+    {
+        $id = Auth::user()->id;
+        $items = Item::where('restaurant_id', $id)->orderBy('price', 'asc')->paginate(9);
+
+        return response()->json(['data' => $items]);
+    }
+
+    public function getItemsByPriceDesc()
+    {
+        $id = Auth::user()->id;
+        $items = Item::where('restaurant_id', $id)->orderBy('price', 'desc')->paginate(9);
+
+        return response()->json(['data' => $items]);
+    }
+
+    public function filterByName(Request $request)
+    {
+        $id = Auth::user()->id;
+        $text = $request->searchValue;
+        $items = Item::where('restaurant_id', $id)->where('name', 'like', '%' . $text . '%')->paginate(9);
+
+        return response()->json(['data' => $items]);
+    }
 }
